@@ -1,0 +1,232 @@
+:root {
+  color: #302b24;
+  background: #fff6e5;
+  font-family: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: default; }
+:focus-visible { outline: 3px solid #355a47; outline-offset: 3px; }
+main {
+  width: min(100%, 860px);
+  height: min(100svh, 900px);
+  margin-inline: auto;
+  padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  display: grid;
+  grid-template-rows: minmax(152px, 1fr) auto;
+  gap: 8px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #ece8dc;
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+[data-renderer="three"] canvas { cursor: grab; touch-action: pinch-zoom; }
+[data-renderer="three"] canvas.dragging { cursor: grabbing; }
+[data-renderer="three"] canvas.petting { cursor: pointer; }
+canvas:focus-visible { outline-offset: -5px; border-radius: inherit; }
+#bowl-target {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff9cc;
+  border-radius: 50%;
+  background: #fff5b21c;
+  box-shadow: 0 0 0 1px #74613166, 0 0 9px #fff2a86b;
+  pointer-events: none;
+}
+#bowl-target[data-mode="hot"] { background: #ffe58c50; box-shadow: 0 0 14px #ffe58c; }
+.scene-status {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 32px;
+  aspect-ratio: 1;
+  border: 4px solid #aa927545;
+  border-top-color: #835c3b;
+  border-radius: 50%;
+  translate: -50% -50%;
+  animation: spin .9s linear infinite;
+  pointer-events: none;
+}
+[data-mood]:not([data-mood="loading"]):not([data-mood="switching"]) .scene-status { display: none; }
+[data-mood="unavailable"] .scene-status {
+  display: grid;
+  place-items: center;
+  border: 0;
+  font-size: 34px;
+  animation: none;
+}
+[data-mood="unavailable"] .scene-status::before { content: '🐾'; }
+@keyframes spin { to { rotate: 1turn; } }
+#meal-hearts {
+  position: absolute;
+  top: 25%;
+  right: 17%;
+  color: #ca595b;
+  font-size: 40px;
+  text-shadow: 0 2px 0 #fff8dd;
+  pointer-events: none;
+  animation: thank-you 1.35s both ease-out;
+}
+@keyframes thank-you {
+  0% { opacity: 0; transform: translateY(8px) scale(.65); }
+  22%, 67% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-21px); }
+}
+#dog-picker {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 19px;
+  background: #fffaf0f0;
+  box-shadow: 0 2px 7px #3223123d;
+}
+#dog-picker button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  background: #f1e9dc;
+  touch-action: manipulation;
+}
+#dog-picker button[aria-pressed="true"] {
+  border-color: #42624b;
+  background: #dce9d5;
+}
+#dog-picker button:disabled:not([aria-pressed="true"]) { opacity: .58; }
+#dog-picker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  pointer-events: none;
+}
+#view-controls { position: absolute; right: 8px; top: 8px; }
+summary {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-inline-start: auto;
+  border-radius: 14px;
+  color: #433925;
+  background: #fff8e6;
+  font-size: 22px;
+  cursor: pointer;
+  list-style: none;
+}
+summary::-webkit-details-marker { display: none; }
+.view-actions {
+  width: 176px;
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 12px;
+  background: #fff9eb;
+}
+.view-actions button { min-width: 44px; min-height: 44px; border: 1px solid #d9cbb5; border-radius: 8px; background: white; }
+#toggle-sound, #reset-view { font-size: 22px; }
+#toggle-sound[aria-pressed="true"] { text-decoration: line-through; color: #73695c; }
+.view-actions p { margin: 5px 0 0; font-size: 12px; }
+.feeding-tray {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+}
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: clamp(44px, 10svh, 76px);
+  gap: 5px;
+}
+.food-card {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid #dfba98;
+  border-radius: 14px;
+  background: #ffe6c9;
+  touch-action: none;
+  user-select: none;
+}
+.food-card:nth-child(4n+2) { background: #ffebbe; border-color: #dac18d; }
+.food-card:nth-child(4n+3) { background: #eae7fd; border-color: #b9b2df; }
+.food-card:nth-child(4n+4) { background: #e6efd5; border-color: #afc69d; }
+.food-card img {
+  position: absolute;
+  width: calc(100% - 5px);
+  height: calc(100% - 2px);
+  object-fit: contain;
+  pointer-events: none;
+}
+.tap-cue {
+  display: none;
+  position: absolute;
+  right: 2px;
+  bottom: -3px;
+  z-index: 1;
+  font-size: clamp(18px, 4.8vw, 25px);
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px #fff7dc);
+  pointer-events: none;
+}
+.show-cue .tap-cue {
+  display: block;
+  animation: tap .95s ease-in-out infinite alternate;
+}
+.show-cue .food-card:first-child { box-shadow: inset 0 0 0 2px #cd933d; }
+@keyframes tap {
+  from { transform: translate(3px, 3px); }
+  to { transform: translate(-4px, -4px); }
+}
+.food-card:active:not(:disabled) img { transform: scale(1.10); }
+.food-card.dragging { opacity: .62; }
+.food-card:disabled:not(.feeding) { opacity: .66; }
+.food-card.feeding { box-shadow: inset 0 0 0 2px #527153; }
+.food-ghost {
+  position: fixed;
+  z-index: 5;
+  width: 66px;
+  height: 56px;
+  object-fit: contain;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+@media (min-width: 620px) and (min-height: 491px) {
+  .food-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+@media (orientation: landscape) and (max-height: 490px) and (min-width: 480px) {
+  main {
+    grid-template-columns: minmax(0, 1fr) minmax(194px, 40%);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .food-grid {
+    grid-auto-rows: clamp(44px, 20svh, 76px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #meal-hearts, .tap-cue, .scene-status { animation: none !important; }
+}
